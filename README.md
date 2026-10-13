@@ -4,8 +4,8 @@ Aplicação de gestão de pets desenvolvida com Vue 3, Vite e Vuetify.
 
 ## Integrantes
 
-- Antonio Vinicius Lima Neponuceno
-- Francisco Everaldo Lima Furtado
+- Antonio Vinicius Lima Neponuceno - https://github.com/VinnyNepo
+- Francisco Everaldo Lima Furtado - https://github.com/everaldo321
 - Equipe PetCare
 
 ## Tema
