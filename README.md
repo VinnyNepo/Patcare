@@ -16,7 +16,8 @@ Sistema para cadastrar, consultar e manter registros de pets, incluindo plano me
 
 - CRUD completo com tabela, edição e exclusão com confirmação
 - Validação de campos obrigatórios e valores numéricos
-- Consulta com busca textual e filtros combinados
+- Consulta com busca textual e filtros combinados por tipo de pet, status do plano e faixa de valor mensal
+- Botão para limpar todos os filtros da consulta
 - Persistência em localStorage para manter os dados ao recarregar a página
 - Integração com a API ViaCEP para preenchimento automático do endereço
 - Navegação por rotas com Vue Router
@@ -52,4 +53,3 @@ npm run build
 - `npm run build`
 - `npm run preview`
 - `npm run type-check`
-

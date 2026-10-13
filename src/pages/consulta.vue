@@ -9,7 +9,7 @@
     <v-card rounded="xl" class="mb-6" elevation="1">
       <v-card-text>
         <v-row>
-          <v-col cols="12" md="12">
+          <v-col cols="12">
             <v-text-field
               v-model="filters.termo"
               label="Buscar por nome"
@@ -18,7 +18,54 @@
               clearable
             />
           </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <v-select
+              v-model="filters.tipo"
+              :items="petTypeOptions"
+              label="Tipo de pet"
+              variant="outlined"
+              clearable
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <v-select
+              v-model="filters.ativo"
+              :items="statusOptions"
+              label="Status do plano"
+              variant="outlined"
+              clearable
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <v-text-field
+              v-model.number="filters.valorMinimo"
+              label="Plano a partir de"
+              type="number"
+              min="0"
+              step="0.01"
+              prefix="R$"
+              variant="outlined"
+              clearable
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <v-text-field
+              v-model.number="filters.valorMaximo"
+              label="Plano até"
+              type="number"
+              min="0"
+              step="0.01"
+              prefix="R$"
+              variant="outlined"
+              clearable
+            />
+          </v-col>
         </v-row>
+        <div class="d-flex justify-end">
+          <v-btn variant="text" color="primary" @click="clearFilters">
+            Limpar filtros
+          </v-btn>
+        </div>
       </v-card-text>
     </v-card>
 
@@ -70,9 +117,15 @@
 
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import { petTypeOptions, usePetcareStore } from '@/composables/usePetcareStore'
+import { petTypeOptions, usePetcareStore, type PetType } from '@/composables/usePetcareStore'
 
 const { records } = usePetcareStore()
+
+const statusOptions: { title: string; value: boolean | null }[] = [
+  { title: 'Todos', value: null },
+  { title: 'Ativo', value: true },
+  { title: 'Inativo', value: false },
+]
 
 const headers = [
   { title: 'Nome', key: 'nome' },
@@ -86,7 +139,19 @@ const headers = [
 
 const filters = reactive({
   termo: '',
+  tipo: null as PetType | null,
+  ativo: null as boolean | null,
+  valorMinimo: null as number | null | '',
+  valorMaximo: null as number | null | '',
 })
+
+const clearFilters = () => {
+  filters.termo = ''
+  filters.tipo = null
+  filters.ativo = null
+  filters.valorMinimo = null
+  filters.valorMaximo = null
+}
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', {
@@ -107,7 +172,19 @@ const formatDate = (value: string) => {
 const filteredRecords = computed(() =>
   records.value.filter((pet) => {
     const term = filters.termo.trim().toLowerCase()
-    return !term || String(pet.nome).toLowerCase().includes(term)
+    const matchesName = !term || String(pet.nome).toLowerCase().includes(term)
+    const matchesType = !filters.tipo || pet.tipo === filters.tipo
+    const matchesStatus = filters.ativo === null || pet.ativo === filters.ativo
+    const matchesMinimum =
+      filters.valorMinimo === null ||
+      filters.valorMinimo === '' ||
+      pet.valorMensal >= filters.valorMinimo
+    const matchesMaximum =
+      filters.valorMaximo === null ||
+      filters.valorMaximo === '' ||
+      pet.valorMensal <= filters.valorMaximo
+
+    return matchesName && matchesType && matchesStatus && matchesMinimum && matchesMaximum
   }),
 )
 </script>
