@@ -306,8 +306,9 @@ const buscarCep = async () => {
   }
 }
 
-const savePet = () => {
-  if (form.value && !form.value.validate()) {
+const savePet = async () => {
+  const validation = await form.value?.validate()
+  if (validation && !validation.valid) {
     return
   }
 
